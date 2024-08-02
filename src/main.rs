@@ -1,5 +1,3 @@
-mod matrix;
-
 use anyhow::{anyhow, Result};
 use std::time::Duration;
 use std::{sync::mpsc, thread};

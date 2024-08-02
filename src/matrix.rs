@@ -1,13 +1,32 @@
+use crate::vector::Vector;
 use anyhow::{anyhow, Result};
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 use std::ops::{Add, AddAssign, Mul};
-use std::process::Output;
 
 pub struct Matrix<T> {
     pub data: Vec<T>,
     pub row: usize,
     pub col: usize,
+}
+
+// pretend this is a heavy operation
+pub fn dot_product<T>(mxa: Vector<T>, mxb: Vector<T>) -> Result<T>
+where
+    T: Copy + Default + Add<Output = T> + Mul<Output = T> + AddAssign,
+{
+    if mxa.len() != mxb.len() {
+        return Err(anyhow!(
+            "第一个矩阵的列数（column）和第二个矩阵的行数（row）不相同！"
+        ));
+    }
+
+    let mut sum = T::default();
+    for i in 0..mxa.len() {
+        sum += mxa[i] * mxb[i];
+    }
+
+    Ok(sum)
 }
 
 pub fn matrix_multiply<T>(mxa: &Matrix<T>, mxb: &Matrix<T>) -> Result<Matrix<T>>
@@ -23,9 +42,14 @@ where
     let mut data = vec![T::default(); mxa.row * mxb.col];
     for i in 0..mxa.row {
         for j in 0..mxb.col {
-            for k in 0..mxa.col {
-                data[i * mxb.col + j] += mxb.data[i * mxa.col + k] * mxb.data[k * mxb.col + j];
-            }
+            let row = Vector::new(&mxa.data[i * mxa.col..(i + 1) * mxa.col]);
+            let col_data = mxb.data[j..]
+                .iter()
+                .step_by(mxb.col)
+                .copied()
+                .collect::<Vec<_>>();
+            let col = Vector::new(col_data);
+            data[i * mxb.col + j] += dot_product(row, col)?;
         }
     }
     Ok(Matrix {
