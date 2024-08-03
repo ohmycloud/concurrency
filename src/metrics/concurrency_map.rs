@@ -1,15 +1,15 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use dashmap::DashMap;
 use std::fmt;
 use std::fmt::Formatter;
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
-pub struct Metrics {
+pub struct ConcurrencyMetrics {
     data: Arc<DashMap<String, i64>>,
 }
 
-impl fmt::Display for Metrics {
+impl fmt::Display for ConcurrencyMetrics {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         for entry in self.data.iter() {
             writeln!(f, "{}: {}", entry.key(), entry.value())?;
@@ -18,9 +18,9 @@ impl fmt::Display for Metrics {
     }
 }
 
-impl Metrics {
+impl ConcurrencyMetrics {
     pub fn new() -> Self {
-        Metrics {
+        ConcurrencyMetrics {
             data: Arc::new(DashMap::new()),
         }
     }

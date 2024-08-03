@@ -1,3 +1,6 @@
-pub mod matrix;
+mod matrix;
 pub mod metrics;
-pub mod vector;
+mod vector;
+
+pub use metrics::AtomicMetrics;
+pub use vector::{dot_product, Vector};
