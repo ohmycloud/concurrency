@@ -45,7 +45,7 @@ fn main() -> Result<()> {
         metrics.inc("call.thread.worker.1")?;
     }
 
-    println!("{:?}", metrics.snapshot());
+    println!("{:?}", metrics);
 
     // start N workers and M requesters
     for idx in 0..N {
