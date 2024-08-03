@@ -171,4 +171,12 @@ mod tests {
         assert_eq!(format!("{:?}", mxc), "Matrix(row=2, col=2, {22 28, 49 64})");
         Ok(())
     }
+
+    #[test]
+    #[should_panic]
+    fn test_matrix_can_not_multiply() {
+        let mxa = Matrix::new(vec![1, 2, 3, 4, 5, 6], 2, 3);
+        let mxb = Matrix::new(vec![1, 2, 3, 4], 2, 2);
+        let _mxc = mxa * mxb;
+    }
 }
