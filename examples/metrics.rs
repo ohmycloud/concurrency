@@ -58,6 +58,6 @@ fn main() -> Result<()> {
 
     loop {
         thread::sleep(Duration::from_millis(1000));
-        println!("{:?}", metrics.snapshot()?);
+        println!("{}", metrics);
     }
 }
